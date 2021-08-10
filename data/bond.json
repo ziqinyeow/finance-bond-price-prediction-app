@@ -1,0 +1,157 @@
+{
+  "month": "Sep 2021",
+  "result": [
+    {
+      "ISIN CODE": "MYBMH1700051",
+      "BOND TYPE": "Fixed Rate Bond",
+      "BOND PRICE": 20,
+      "BOND RETURN": 0.72,
+      "VOLATILITY": 0.0067,
+      "RATIO": 0.2
+    },
+    {
+      "ISIN CODE": "MYBMH1700051",
+      "BOND TYPE": "Fixed Rate Bond",
+      "BOND PRICE": 20,
+      "BOND RETURN": 0.72,
+      "VOLATILITY": 0.0067,
+      "RATIO": 0.2
+    },
+    {
+      "ISIN CODE": "MYBMH1700051",
+      "BOND TYPE": "Fixed Rate Bond",
+      "BOND PRICE": 20,
+      "BOND RETURN": 0.72,
+      "VOLATILITY": 0.0067,
+      "RATIO": 0.2
+    },
+    {
+      "ISIN CODE": "MYBMH1700051",
+      "BOND TYPE": "Fixed Rate Bond",
+      "BOND PRICE": 20,
+      "BOND RETURN": 0.72,
+      "VOLATILITY": 0.0067,
+      "RATIO": 0.2
+    },
+    {
+      "ISIN CODE": "MYBMH1700051",
+      "BOND TYPE": "Fixed Rate Bond",
+      "BOND PRICE": 20,
+      "BOND RETURN": 0.72,
+      "VOLATILITY": 0.0067,
+      "RATIO": 0.2
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBVS1302575",
+      "BOND TYPE": "Callable Bond",
+      "BOND PRICE": 18,
+      "BOND RETURN": 0.572,
+      "VOLATILITY": 0.031,
+      "RATIO": 0.8
+    },
+    {
+      "ISIN CODE": "MYBGO0900619",
+      "BOND TYPE": "Bond with Secondary Notes",
+      "BOND PRICE": 230,
+      "BOND RETURN": 0.132,
+      "VOLATILITY": 0.12,
+      "RATIO": 0.9
+    },
+    {
+      "ISIN CODE": "MYBGO0900619",
+      "BOND TYPE": "Bond with Secondary Notes",
+      "BOND PRICE": 230,
+      "BOND RETURN": 0.132,
+      "VOLATILITY": 0.12,
+      "RATIO": 0.9
+    },
+    {
+      "ISIN CODE": "MYBGO0900619",
+      "BOND TYPE": "Bond with Secondary Notes",
+      "BOND PRICE": 230,
+      "BOND RETURN": 0.132,
+      "VOLATILITY": 0.12,
+      "RATIO": 0.9
+    },
+    {
+      "ISIN CODE": "MYBGO0900619",
+      "BOND TYPE": "Bond with Secondary Notes",
+      "BOND PRICE": 230,
+      "BOND RETURN": 0.132,
+      "VOLATILITY": 0.12,
+      "RATIO": 0.9
+    },
+    {
+      "ISIN CODE": "MYBGO0900619",
+      "BOND TYPE": "Bond with Secondary Notes",
+      "BOND PRICE": 230,
+      "BOND RETURN": 0.132,
+      "VOLATILITY": 0.12,
+      "RATIO": 0.9
+    }
+  ]
+}

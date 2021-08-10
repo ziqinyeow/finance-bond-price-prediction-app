@@ -1,0 +1,33 @@
+Icons
+      <i className="ri-dashboard-fill"></i>
+      <i className="ri-bubble-chart-fill"></i>
+      <i class="ri-bar-chart-2-fill"></i>
+      <i className="ri-robot-fill"></i>
+      <i className="ri-user-3-fill"></i>
+      <i className="ri-file-upload-line"></i>
+      <i className="ri-database-2-fill"></i>
+      <i className="ri-settings-3-fill"></i>
+
+
+Colors
+
+
+Meta Title
+        <title>{meta.title}</title>
+        <meta name="robots" content="follow, index" />
+        <meta content={meta.description} name="description" />
+        <meta property="og:url" content={`https://leerob.io${router.asPath}`} />
+        <link rel="canonical" href={`https://leerob.io${router.asPath}`} />
+        <meta property="og:type" content={meta.type} />
+        <meta property="og:site_name" content="Lee Robinson" />
+        <meta property="og:description" content={meta.description} />
+        <meta property="og:title" content={meta.title} />
+        <meta property="og:image" content={meta.image} />
+        <meta name="twitter:card" content="summary_large_image" />
+        <meta name="twitter:site" content="@leeerob" />
+        <meta name="twitter:title" content={meta.title} />
+        <meta name="twitter:description" content={meta.description} />
+        <meta name="twitter:image" content={meta.image} />
+        {meta.date && (
+          <meta property="article:published_time" content={meta.date} />
+        )}
