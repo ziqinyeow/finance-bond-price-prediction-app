@@ -1,21 +1,7 @@
 import { createGlobalStyle, ThemeProvider } from "styled-components";
 
 const GlobalStyle = createGlobalStyle`
-  * {
-    padding: 0;
-    margin: 0;
-    font-family: "Medium", Segoe UI, Roboto, Oxygen, -apple-system, BlinkMacSystemFont, 
-      Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
-    max-width: 100vw;
-    box-sizing: border-box;
-    color: #4d5e80;
-    
-  }
-
-  a {
-    color: inherit;
-    text-decoration: none;
-  }
+  
 
   @font-face {
     font-family: "Light";
@@ -51,6 +37,21 @@ const GlobalStyle = createGlobalStyle`
     font-family: "Book";
     src: local("AirbnbCerealBook"),
       url("./font/AirbnbCerealBook.ttf") format("truetype");
+  }
+  
+  * {
+    padding: 0;
+    margin: 0;
+    font-family: "Medium";
+    max-width: 100vw;
+    box-sizing: border-box;
+    color: #4d5e80;
+    
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
   }
 `;
 

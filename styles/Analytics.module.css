@@ -1,0 +1,9 @@
+* {
+  font-family: "Medium";
+}
+
+@font-face {
+  font-family: "Medium";
+  src: local("AirbnbCerealMedium"),
+    url("./font/AirbnbCerealMedium.ttf") format("truetype");
+}

@@ -1,12 +1,16 @@
 import CircularStatic from "@/components/CircularProgressBar";
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
 import styled from "styled-components";
 import { Bar } from "react-chartjs-2";
+import { useState } from "react";
 import path from "path";
 import fs from "fs";
 
-export default function Home({ result }) {
+export default function Home({ result, content }) {
+  const [search, setSearch] = useState("");
+  const [searchResult, setSearchResult] = useState([]);
+
   let now = new Date();
   let current;
   if (now.getMonth() == 11) {
@@ -14,43 +18,22 @@ export default function Home({ result }) {
   } else {
     current = new Date(now.getFullYear(), now.getMonth() + 1, 1);
   }
-  console.log(result);
 
-  const data = {
-    labels: [
-      "Jan",
-      "Feb",
-      "Mar",
-      "April",
-      "May",
-      "Jun",
-      "July",
-      "Aug",
-      "Sep",
-      "Oct",
-      "Nov",
-      "Des",
-    ],
-    datasets: [
-      {
-        label: `${now.getFullYear()} Bond Price (RM) `,
-        data: [9, 3, 5, 2, 3],
-        backgroundColor: "#8833ff",
-      },
-    ],
-  };
-
-  const options = {
-    maintainAspectRatio: false,
-    scale: {
-      ticks: { beginAtZero: true },
-    },
+  const handleSearch = (e) => {
+    const { value } = e.target;
+    setSearch(e.target.value);
+    if (value.trim()) {
+      const result = content.result.filter((res) =>
+        res["BOND TYPE"].toLowerCase().includes(value.trim().toLowerCase())
+      );
+      setSearchResult(result);
+    }
   };
 
   return (
     <Container>
       <Head>
-        <title>Home</title>
+        <title>Analytics</title>
         <meta name="description" content="Finance Model" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -59,12 +42,13 @@ export default function Home({ result }) {
           <LeftPanel>
             <Section>
               <Header>
-                <h3>Fixed Bond Overview</h3>
+                <h3>{result["BOND TYPE"]} Overview</h3>
+                <Rank>Rank #{result["id"]}</Rank>
               </Header>
               <Grids3>
                 <BeautifulGrid>
                   <h1>
-                    <span>RM</span> {23}
+                    <span>RM</span> {result["BOND PRICE"]}
                     <span> .00</span>
                   </h1>
                   <h3>Bond{"'"}s Price</h3>
@@ -80,14 +64,14 @@ export default function Home({ result }) {
                 </BeautifulGrid>
                 <Grid>
                   <h1>
-                    {0.7237}
+                    {result["BOND RETURN"]}
                     <span> %</span>
                   </h1>
                   <h2>Bond Return</h2>
                 </Grid>
                 <Grid>
                   <h1>
-                    {0.0067}
+                    {result["VOLATILITY"]}
                     <span> %</span>
                   </h1>
                   <h2>Volatility</h2>
@@ -97,10 +81,42 @@ export default function Home({ result }) {
             <Section>
               <Grids2>
                 <Grid>
-                  <Bar data={data} width={100} height={50} options={options} />
+                  <Bar
+                    data={{
+                      labels: [
+                        "Jan",
+                        "Feb",
+                        "Mar",
+                        "April",
+                        "May",
+                        "Jun",
+                        "July",
+                        "Aug",
+                        "Sep",
+                        "Oct",
+                        "Nov",
+                        "Dec",
+                      ],
+                      datasets: [
+                        {
+                          label: `${now.getFullYear()} Bond Price (RM) `,
+                          data: result["BOND PRICE SET"],
+                          backgroundColor: "#8833ff",
+                        },
+                      ],
+                    }}
+                    width={100}
+                    height={50}
+                    options={{
+                      maintainAspectRatio: false,
+                      scale: {
+                        ticks: { beginAtZero: true },
+                      },
+                    }}
+                  />
                 </Grid>
                 <GridProgressBar>
-                  <CircularStatic value={77.8} />
+                  <CircularStatic value={result["ACCRUED INTEREST"]} />
                   <div>
                     <h1>Accrued Interest</h1>
                     <h3>
@@ -121,14 +137,38 @@ export default function Home({ result }) {
           <RightPanel>
             <Header>Bond Type</Header>
             <BondContainer>
-              <SearchBar>
+              <SearchBar onChange={handleSearch}>
                 <i className="ri-search-eye-line"></i>
                 <input type="text" placeholder="Search" />
-                <i className="ri-sort-desc"></i>
+                <i className="ri-sort-desc" style={{ cursor: "pointer" }}></i>
               </SearchBar>
-              {/* {result.result.map((res, i) => (
-                <p key={i}>{res["BOND TYPE"]}</p>
-              ))} */}
+              <BondInnerContainer>
+                {search.length !== 0
+                  ? searchResult.map((res, i) => (
+                      <Link
+                        href={`/analytics/[id]`}
+                        as={`/analytics/${res["ISIN CODE"]}`}
+                        key={i}
+                      >
+                        <a>
+                          <Bond>
+                            <p>{res["BOND TYPE"]}</p>
+                          </Bond>
+                        </a>
+                      </Link>
+                    ))
+                  : content.result.map((res, i) => (
+                      <Link
+                        href={`/analytics/[id]`}
+                        as={`/analytics/${res["ISIN CODE"]}`}
+                        key={i}
+                      >
+                        <a>
+                          <Bond>{res["BOND TYPE"]}</Bond>
+                        </a>
+                      </Link>
+                    ))}
+              </BondInnerContainer>
             </BondContainer>
           </RightPanel>
         </Main>
@@ -144,7 +184,8 @@ export async function getStaticPaths() {
     params: { id: res["ISIN CODE"].toString() },
   }));
   return {
-    props: { paths, fallback: true },
+    paths,
+    fallback: false,
   };
 }
 
@@ -153,7 +194,7 @@ export async function getStaticProps({ params: { id } }) {
   const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
   const result = content.result.find((res) => res["ISIN CODE"] === id);
   return {
-    props: { result },
+    props: { result, content },
   };
 }
 
@@ -161,6 +202,9 @@ const Container = styled.div`
   width: 100%;
   padding: 20px 0;
   background-color: ${(props) => props.theme.bg};
+  * {
+    font-family: "Medium";
+  }
 `;
 
 const InnerContainer = styled.div`
@@ -175,6 +219,11 @@ const Main = styled.div`
   display: grid;
   grid-template-columns: 3fr 1.2fr;
   grid-gap: 40px;
+
+  @media (max-width: 1305px) {
+    grid-template-columns: 1fr;
+    grid-gap: 100px;
+  }
 `;
 
 const LeftPanel = styled.div``;
@@ -188,12 +237,22 @@ const Section = styled.div`
 `;
 
 const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-weight: 700;
   color: ${(props) => props.theme.clr4};
+  margin-bottom: 20px;
   h3 {
     color: ${(props) => props.theme.clr4};
-    padding-bottom: 40px;
   }
+`;
+
+const Rank = styled.div`
+  padding: 10px 40px;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.clr5};
+  color: ${(props) => props.theme.clr2};
 `;
 
 const Grids3 = styled.div`
@@ -279,6 +338,10 @@ const RightPanel = styled.div`
   border-radius: 18px;
   box-shadow: rgba(0, 0, 0, 0.12) 0px 1px 3px, rgba(0, 0, 0, 0.24) 0px 1px 2px;
   background-color: ${(props) => props.theme.clr2};
+
+  * {
+    color: ${(props) => props.theme.clr4};
+  }
 `;
 
 const BondContainer = styled.div``;
@@ -304,5 +367,47 @@ const SearchBar = styled.div`
 
   i {
     color: ${(props) => props.theme.clr4};
+  }
+`;
+
+const BondInnerContainer = styled.div`
+  max-height: 60vh;
+  overflow-y: auto;
+
+  ::-webkit-scrollbar {
+    width: 20px;
+  }
+  ::-webkit-scrollbar-track {
+    background-color: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: linear-gradient(
+      150deg,
+      ${(props) => props.theme.clr5},
+      ${(props) => props.theme.clr6}
+    );
+    border-radius: 20px;
+    border: 6px solid transparent;
+    background-clip: content-box;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: ${(props) => props.theme.clr5};
+  }
+`;
+
+const Bond = styled.div`
+  min-height: 30px;
+  padding: 10px;
+  border-radius: 4px;
+  max-width: 100%;
+  cursor: pointer;
+
+  :hover {
+    color: ${(props) => props.theme.clr2};
+    background: linear-gradient(
+      150deg,
+      ${(props) => props.theme.clr5},
+      ${(props) => props.theme.clr6}
+    );
   }
 `;

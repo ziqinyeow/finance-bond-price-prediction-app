@@ -1,11 +1,11 @@
 import CircularStatic from "@/components/CircularProgressBar";
 import Head from "next/head";
-import Image from "next/image";
+import Link from "next/link";
 import styled from "styled-components";
 import { Bar } from "react-chartjs-2";
+import { useState } from "react";
 import path from "path";
 import fs from "fs";
-import { useState } from "react";
 
 export default function Home({ content }) {
   const [search, setSearch] = useState("");
@@ -33,7 +33,7 @@ export default function Home({ content }) {
   return (
     <Container>
       <Head>
-        <title>Home</title>
+        <title>Analytics</title>
         <meta name="description" content="Finance Model" />
         <link rel="icon" href="/favicon.ico" />
       </Head>
@@ -43,11 +43,12 @@ export default function Home({ content }) {
             <Section>
               <Header>
                 <h3>Fixed Bond Overview</h3>
+                <Rank>Rank #1</Rank>
               </Header>
               <Grids3>
                 <BeautifulGrid>
                   <h1>
-                    <span>RM</span> {23}
+                    <span>RM</span> {content.result[0]["BOND PRICE"]}
                     <span> .00</span>
                   </h1>
                   <h3>Bond{"'"}s Price</h3>
@@ -63,14 +64,14 @@ export default function Home({ content }) {
                 </BeautifulGrid>
                 <Grid>
                   <h1>
-                    {0.7237}
+                    {content.result[0]["BOND RETURN"]}
                     <span> %</span>
                   </h1>
                   <h2>Bond Return</h2>
                 </Grid>
                 <Grid>
                   <h1>
-                    {0.0067}
+                    {content.result[0]["VOLATILITY"]}
                     <span> %</span>
                   </h1>
                   <h2>Volatility</h2>
@@ -94,12 +95,12 @@ export default function Home({ content }) {
                         "Sep",
                         "Oct",
                         "Nov",
-                        "Des",
+                        "Dec",
                       ],
                       datasets: [
                         {
                           label: `${now.getFullYear()} Bond Price (RM) `,
-                          data: [9, 3, 5, 2, 3],
+                          data: content.result[0]["BOND PRICE SET"],
                           backgroundColor: "#8833ff",
                         },
                       ],
@@ -115,7 +116,9 @@ export default function Home({ content }) {
                   />
                 </Grid>
                 <GridProgressBar>
-                  <CircularStatic value={77.8} />
+                  <CircularStatic
+                    value={content.result[0]["ACCRUED INTEREST"]}
+                  />
                   <div>
                     <h1>Accrued Interest</h1>
                     <h3>
@@ -144,12 +147,20 @@ export default function Home({ content }) {
               <BondInnerContainer>
                 {search.length !== 0
                   ? searchResult.map((res, i) => (
-                      <Bond key={i}>
-                        <p>{res["BOND TYPE"]}</p>
-                      </Bond>
+                      <Link href={`analytics/${res["ISIN CODE"]}`} key={i}>
+                        <a>
+                          <Bond>
+                            <p>{res["BOND TYPE"]}</p>
+                          </Bond>
+                        </a>
+                      </Link>
                     ))
                   : content.result.map((res, i) => (
-                      <Bond key={i}>{res["BOND TYPE"]}</Bond>
+                      <Link href={`analytics/${res["ISIN CODE"]}`} key={i}>
+                        <a>
+                          <Bond>{res["BOND TYPE"]}</Bond>
+                        </a>
+                      </Link>
                     ))}
               </BondInnerContainer>
             </BondContainer>
@@ -163,12 +174,6 @@ export default function Home({ content }) {
 export async function getStaticProps({ params }) {
   const filePath = path.join(process.cwd(), "data", "bond.json");
   const content = JSON.parse(fs.readFileSync(filePath, "utf-8"));
-  // const result = content.result.filter(
-  //   (res) => res["ISIN CODE"] === "MYBMH1700051"
-  // );
-  // const paths = content.result.map((res) => ({
-  //   params: { id: res["ISIN CODE"].toString() },
-  // }));
   return {
     props: { content },
   };
@@ -210,12 +215,22 @@ const Section = styled.div`
 `;
 
 const Header = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   font-weight: 700;
   color: ${(props) => props.theme.clr4};
+  margin-bottom: 20px;
   h3 {
     color: ${(props) => props.theme.clr4};
-    padding-bottom: 40px;
   }
+`;
+
+const Rank = styled.div`
+  padding: 10px 40px;
+  border-radius: 5px;
+  background-color: ${(props) => props.theme.clr5};
+  color: ${(props) => props.theme.clr2};
 `;
 
 const Grids3 = styled.div`
