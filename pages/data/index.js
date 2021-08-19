@@ -3,8 +3,30 @@ import Head from "next/head";
 import Image from "next/image";
 import styled from "styled-components";
 import { parse } from "papaparse";
+import { listFiles } from "@/lib/storage";
+import { useRouter } from "next/router";
 
-export default function Data() {
+const { BlobServiceClient } = require("@azure/storage-blob");
+
+const uploadFiles = async (files) => {
+  const containerName = process.env.NEXT_PUBLIC_CONTAINER_NAME;
+  const blobSasUrl = process.env.NEXT_PUBLIC_BLOB_SAS_URL;
+  const blobServiceClient = new BlobServiceClient(blobSasUrl);
+  const containerClient = blobServiceClient.getContainerClient(containerName);
+
+  try {
+    const promises = [];
+    for (const file of files) {
+      const blockBlobClient = containerClient.getBlockBlobClient(file.name);
+      promises.push(blockBlobClient.uploadBrowserData(file));
+    }
+    await Promise.all(promises);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+export default function Data({ files }) {
   const [highlighted, setHighlighted] = useState(false);
   const [datas, setData] = useState([]);
   const [newDataset, setNewDataset] = useState([]);
@@ -26,6 +48,11 @@ export default function Data() {
     "Sep 2020",
     "Oct 2020",
   ];
+
+  const router = useRouter();
+  const refreshData = () => {
+    router.replace(router.asPath);
+  };
 
   return (
     <Container>
@@ -52,16 +79,30 @@ export default function Data() {
               }}
               onDrop={async (e) => {
                 e.preventDefault();
-                if (
-                  e.dataTransfer.files[0].type === "application/vnd.ms-excel" ||
-                  e.dataTransfer.files[0].type === "text/csv"
-                ) {
-                  const file = await e.dataTransfer.files[0];
-                  const text = await e.dataTransfer.files[0].text();
-                  const result = parse(text, { header: true });
-                  setData(result.data);
-                  setNewDataset((prev) => [...prev, file.name]);
-                }
+                const files = await e.dataTransfer.files;
+                Promise.all(
+                  [...files].map((file) => {
+                    if (
+                      file.type === "application/vnd.ms-excel" ||
+                      file.type === "text/csv"
+                    ) {
+                      setNewDataset((prev) => [file.name, ...prev]);
+                    }
+                  })
+                );
+                await uploadFiles(files);
+                refreshData();
+                // const uploaded = await uploadFiles(files);
+                // if (
+                //   e.dataTransfer.files[0].type === "application/vnd.ms-excel" ||
+                //   e.dataTransfer.files[0].type === "text/csv"
+                // ) {
+                //   const file = await e.dataTransfer.files[0];
+                //   const text = await e.dataTransfer.files[0].text();
+                //   const result = parse(text, { header: true });
+                //   setData(result.data);
+                //   setNewDataset((prev) => [...prev, file.name]);
+                // }
               }}
               highlight={highlighted}
             >
@@ -72,12 +113,21 @@ export default function Data() {
                 type="file"
                 accept="application/vnd.ms-excel,.csv"
                 id="file"
+                multiple
                 onChange={async (e) => {
-                  const file = await e.target.files[0];
-                  const text = await e.target.files[0].text();
-                  const result = parse(text, { header: true });
-                  setData(result.data);
-                  setNewDataset((prev) => [...prev, file.name]);
+                  const files = await e.target.files;
+                  // const text = await e.target.files[0].text();
+                  // const result = parse(text, { header: true });
+                  // setData(result.data);
+                  Promise.all(
+                    [...files].map((file) =>
+                      setNewDataset((prev) => [file.name, ...prev])
+                    )
+                  );
+                  await uploadFiles(files);
+                  refreshData();
+                  // const file = await e.target.file[0];
+                  // await uploadFiles(file);
                 }}
                 hidden
               />
@@ -90,11 +140,19 @@ export default function Data() {
             <Header>
               <h2>New</h2>
             </Header>
-            <DatasetContainer>
+            {/* <DatasetContainer>
               {newDataset.map((newData, i) => (
                 <Dataset key={i}>
                   <i className="ri-file-excel-2-line"></i>
                   {newData}
+                </Dataset>
+              ))}
+            </DatasetContainer> */}
+            <DatasetContainer>
+              {files.map((file, i) => (
+                <Dataset key={i}>
+                  <i className="ri-file-excel-2-line"></i>
+                  {file}
                 </Dataset>
               ))}
             </DatasetContainer>
@@ -117,6 +175,13 @@ export default function Data() {
       </InnerContainer>
     </Container>
   );
+}
+
+export async function getStaticProps() {
+  const files = await listFiles();
+  return {
+    props: { files },
+  };
 }
 
 const Container = styled.div`
